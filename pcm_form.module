@@ -1,0 +1,49 @@
+<?php
+
+/**                          
+ * Implements hook_form_alter(). 
+ */
+function pcm_form_form_alter(&$form, &$form_state, $form_id) {
+  
+  global $user; 
+
+  if (isset($form['#node_edit_form'])&& $form['#node_edit_form'] 
+      && ($form['type']['#value'] == 'cm_project'
+          || $form['type']['#value'] == 'cm_show'
+          || $form['type']['#value'] == 'series_request')) {
+    
+    // When user is PCM Admin - don't show the placeholder tokens for view fields
+    if ($user->uid == 1) { 
+
+      $token_fields = array(
+        'cm_project' => array(
+          'field_project_shows',
+          'field_project_airings',
+          'field_series_requests_all',
+          'field_series_requests_current',
+          'field_legacy_series_renewals',
+        ),
+        'series_request' => array(
+          'field_season_request_airings',
+        ),        
+        'cm_show' => array(
+          'field_show_airings_view',
+        ),
+      );
+      
+      $form_type = $form['type']['#value']; 
+      
+      foreach ($token_fields[$form_type] as $token_field) {
+        if (isset($form[$token_field])) {
+          $field = &$form[$token_field];
+          
+          if (isset($field[LANGUAGE_NONE]) && isset($field[LANGUAGE_NONE][0])
+              && (isset($field[LANGUAGE_NONE][0]['token_help']))) {            
+            unset($field[LANGUAGE_NONE][0]['token_help']);
+          }
+        }
+      }
+    }
+  }     
+}
+

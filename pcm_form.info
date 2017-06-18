@@ -1,0 +1,10 @@
+name = Open Signal PCM Form
+description = "Helper functions for PCM specific form stuff"
+
+core = 7.x
+package = Open Signal PCM Community Media Advanced
+version = 7.x-1.0
+project = "pcm_form"
+project_status_url = https://github.com/cm-advanced/pcm_form
+
+files[] = pcm_form.module
